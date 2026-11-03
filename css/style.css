@@ -1,0 +1,24 @@
+:root{color-scheme:dark;--cyan:#25d9ff;--gold:#ffd34d;--panel:#101b2b}
+*{box-sizing:border-box}body{margin:0;background:#050912;color:#eaf7ff;font-family:Arial,"Noto Sans JP",sans-serif}
+main{max-width:1100px;margin:0 auto;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+h1{font-size:clamp(18px,3vw,27px);letter-spacing:.08em;margin:0}
+.sub{color:#8aa9c1;font-size:12px;margin-top:4px}
+button{background:#12334b;color:#eaf7ff;border:1px solid #2e789a;padding:10px 16px;border-radius:5px;font-weight:bold;cursor:pointer}
+button:hover{background:#18516d}
+.hud{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.panel{background:linear-gradient(135deg,#122338,#091321);border:1px solid #24425b;border-radius:5px;padding:9px 12px;min-width:0}
+.label{font-size:10px;color:#7ea5bf;letter-spacing:.13em}.value{font-size:clamp(17px,3vw,25px);font-weight:800;font-variant-numeric:tabular-nums}
+.gauge{height:12px;background:#263443;border:1px solid #496076;margin-top:6px;overflow:hidden}
+#gaugeFill{height:100%;width:22%;background:linear-gradient(90deg,#00a7ff,#7cf7ff);transition:width .08s}
+.stage{position:relative;background:radial-gradient(ellipse at 50% 15%,#172c43,#050a12 70%);border:1px solid #24425b;border-radius:6px;padding:12px;overflow:hidden}
+canvas{display:block;width:100%;height:auto;max-height:72vh;aspect-ratio:1000/650;background:#050b14}
+.bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#90aabe;font-size:12px;margin-top:10px}
+#status{color:var(--gold);font-weight:bold}
+.keys{display:flex;gap:5px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.key{width:42px;height:35px;border:1px solid #51718a;border-bottom:4px solid #263f54;background:#d8e8f1;color:#10202b;border-radius:3px;text-align:center;padding-top:8px;font-weight:bold}
+.key.active{background:#48e4ff;box-shadow:0 0 15px #1bbce8}
+.key.scratch{background:#e0b94b;color:#211a08}
+.key.scratch.active{background:#fff0a0;box-shadow:0 0 15px #ffc72c}
+.help{font-size:12px;line-height:1.7;color:#9bb2c5;margin-top:12px}
+@media(max-width:650px){.hud{grid-template-columns:1fr 1fr}.stage{padding:5px}main{padding:9px}}
