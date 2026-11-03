@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IIDX Keyboard Edition - Prototype</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<header>
+ <div><h1>IIDX KEYBOARD EDITION</h1><div class="sub">7 KEYS + SCRATCH / GAMEPLAY PROTOTYPE</div></div>
+ <div><button id="startBtn">START / RESTART</button> <button id="pauseBtn">PAUSE</button></div>
+</header>
+<section class="hud">
+ <div class="panel"><div class="label">EX SCORE</div><div class="value" id="score">000000</div><div class="label" id="maxScore">MAX 000000</div></div>
+ <div class="panel"><div class="label">GROOVE GAUGE · NORMAL</div><div class="value" id="gaugeText">22.0%</div><div class="gauge"><div id="gaugeFill"></div></div></div>
+ <div class="panel"><div class="label">COMBO / MAX</div><div class="value"><span id="combo">0</span> <small style="color:#6f91aa">/</small> <span id="maxCombo">0</span></div><div class="label" id="bp">BP 0</div></div>
+ <div class="panel"><div class="label">PLAY STATUS</div><div class="value" id="status">READY</div><div class="label" id="level">DEMO CHART · ☆5</div></div>
+</section>
+<div class="stage"><canvas id="game" width="1000" height="650"></canvas></div>
+<div class="keys" id="keys">
+ <div class="key scratch" data-key="Shift">SHIFT</div>
+ <div class="key" data-key="z">Z</div><div class="key" data-key="x">X</div><div class="key" data-key="c">C</div>
+ <div class="key" data-key="v">V</div><div class="key" data-key="s">S</div><div class="key" data-key="d">D</div><div class="key" data-key="f">F</div>
+</div>
+<div class="bottom"><span>判定: PGREAT / GREAT / GOOD / BAD / POOR</span><span id="fastslow">FAST 0　SLOW 0</span></div>
+<div class="help">
+ 操作：Z・X・C・V・S・D・F＝1～7鍵、左Shift＝スクラッチ。<br>
+ ノーツは判定ラインに重なる瞬間に入力。STARTでデモ譜面を開始できます。Spaceでも一時停止できます。
+</div>
+</main>
+<script src="js/main.js" defer></script>
+</body>
+</html>
