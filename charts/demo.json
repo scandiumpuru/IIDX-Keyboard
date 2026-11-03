@@ -1,0 +1,7 @@
+{
+  "title": "Practice Demo",
+  "difficulty": "NORMAL",
+  "level": 5,
+  "bpm": 166,
+  "notes": "The v0.1 prototype currently generates its demo chart in js/main.js. This file reserves the chart-data format for v0.2."
+}
