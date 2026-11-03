@@ -25,3 +25,6 @@ Open `index.html` in a modern desktop browser. No build step or dependencies are
 
 ## Notes
 This is an independent fan-made prototype and is not affiliated with or endorsed by KONAMI. It contains no official game assets or music. Judgment windows and gauge behavior are prototype approximations and should be calibrated against documented behavior before claiming exact arcade equivalence.
+
+
+<!-- Pages deployment trigger: static site files are served from the repository root. -->
