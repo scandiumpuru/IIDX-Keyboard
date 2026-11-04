@@ -16,9 +16,10 @@ canvas{display:block;width:100%;height:auto;max-height:72vh;aspect-ratio:1000/65
 .bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#90aabe;font-size:12px;margin-top:10px}
 #status{color:var(--gold);font-weight:bold}
 .keys{display:flex;gap:5px;justify-content:center;margin-top:12px;flex-wrap:wrap}
-.key{width:42px;height:35px;border:1px solid #51718a;border-bottom:4px solid #263f54;background:#d8e8f1;color:#10202b;border-radius:3px;text-align:center;padding-top:8px;font-weight:bold}
+.key{width:55px;height:35px;border:1px solid #51718a;border-bottom:4px solid #263f54;background:#d8e8f1;color:#10202b;border-radius:3px;text-align:center;padding-top:8px;font-weight:bold}
 .key.active{background:#48e4ff;box-shadow:0 0 15px #1bbce8}
-.key.scratch{background:#e0b94b;color:#211a08}
+.key.scratch{width:76px;background:#e0b94b;color:#211a08}
+.key[data-key="s"],.key[data-key="d"],.key[data-key="f"]{width:42px}
 .key.scratch.active{background:#fff0a0;box-shadow:0 0 15px #ffc72c}
 .help{font-size:12px;line-height:1.7;color:#9bb2c5;margin-top:12px}
 @media(max-width:650px){.hud{grid-template-columns:1fr 1fr}.stage{padding:5px}main{padding:9px}}
