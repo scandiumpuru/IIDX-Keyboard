@@ -8,8 +8,8 @@ $('difficulty').addEventListener('change',e=>{selectedDifficulty=e.target.value;
 function updateLevel(){if(!chartData)return;const d=chartData.difficulties[selectedDifficulty];$('level').textContent=chartData.song+' · '+selectedDifficulty.toUpperCase()+' ☆'+d.level;$('gaugeTitle').textContent=selectedDifficulty.toUpperCase();}
 const keys=['shift','z','s','x','d','c','f','v'];
 const laneNames=['皿','1','2','3','4','5','6','7'];
-const laneWidths=[150,105,75,105,75,105,75,105];
-const laneGap=3, top=48, hitY=2496, travel=2448, approach=1900;
+const laneWidths=[52,36,26,36,26,36,26,36];
+const laneGap=1, top=25, hitY=830, travel=805, approach=1900;
 let hiSpeed=1.0;
 const speedInput=$('speed'),speedValue=$('speedValue');
 function setSpeed(v){hiSpeed=Number(v);speedValue.textContent=hiSpeed.toFixed(1)+'x';}
