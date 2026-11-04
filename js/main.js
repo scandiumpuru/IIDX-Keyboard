@@ -19,14 +19,15 @@ let counts={PGREAT:0,GREAT:0,GOOD:0,BAD:0,POOR:0};
 let held=new Set(),lastJudge='',judgeUntil=0,judgeDelta=0;
 const timings={PGREAT:16.67,GREAT:33.33,GOOD:116.67,BAD:250};
 function makeChart(){
- const a=[]; let t=2200;
- const pattern=[
- [1],[2],[3],[4],[5],[6],[7],[0],[1,5],[2,6],[3,7],[0,2],[1,3,5],[4,6],[0],[7],
- [1,2],[3,4],[5,6],[0,7],[2,4,6],[1,3,5],[0],[6],[5],[4],[3],[2],[1],[0],
- [1,4],[2,5],[3,6],[4,7],[0,3],[1,5,7],[2,4,6],[0],[0,1],[0,7],[2],[3],[4],[5],[6],[7]
- ];
- pattern.forEach((lanes,i)=>{lanes.forEach(l=>a.push({t,l,judged:false}));t+=i%8===7?650:360;});
- return a.sort((x,y)=>x.t-y.t);
+ const a=[];
+ let t=2200;
+ // Beginner demo: one note at a time, with generous spacing.
+ const pattern=[1,2,3,4,5,6,7,4,2,5,3,6,4,1,7,5,2,4,6,3,5,7,4,2,1,3,5,7];
+ pattern.forEach((lane,i)=>{
+  a.push({t,l:lane,judged:false});
+  t+=i%7===6?850:650;
+ });
+ return a;
 }
 function reset(){
  chart=makeChart();score=combo=maxCombo=bp=fast=slow=0;gauge=22;
