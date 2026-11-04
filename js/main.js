@@ -135,7 +135,7 @@ function draw(){
 function loop(ts){
  if(state!=='playing'){draw();return;}
  elapsed=audio.currentTime*1000;
- $('status').textContent=ts<startAt?'GET READY':'PLAYING';
+ $('status').textContent='PLAYING';
  for(const n of chart){if(!n.judged&&elapsed>n.t+timings.BAD){n.judged=true;setJudge('POOR',timings.BAD+1);}}
  if(gauge<=0){draw();return;}
  if(chart.every(n=>n.judged)){state='clear';audio.pause();$('status').textContent=gauge>=80?'CLEAR':'FAILED';draw();return;}
