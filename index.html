@@ -18,15 +18,15 @@
  <div class="panel"><div class="label">COMBO / MAX</div><div class="value"><span id="combo">0</span> <small style="color:#6f91aa">/</small> <span id="maxCombo">0</span></div><div class="label" id="bp">BP 0</div></div>
  <div class="panel"><div class="label">PLAY STATUS</div><div class="value" id="status">READY</div><div class="label" id="level">DEMO CHART · ☆5</div></div>
 </section>
-<div class="stage"><canvas id="game" width="1000" height="650"></canvas></div>
+<div class="speed-control"><label for="speed">HI-SPEED</label><input id="speed" type="range" min="0.5" max="3.0" step="0.1" value="1.0"><output id="speedValue">1.0x</output></div>
+<div class="stage"><canvas id="game" width="1000" height="850"></canvas></div>
 <div class="keys" id="keys">
  <div class="key scratch" data-key="Shift">SHIFT</div>
- <div class="key" data-key="z">Z</div><div class="key" data-key="x">X</div><div class="key" data-key="c">C</div>
- <div class="key" data-key="v">V</div><div class="key" data-key="s">S</div><div class="key" data-key="d">D</div><div class="key" data-key="f">F</div>
+ <div class="key" data-key="z">Z</div><div class="key" data-key="s">S</div><div class="key" data-key="x">X</div><div class="key" data-key="d">D</div><div class="key" data-key="c">C</div><div class="key" data-key="f">F</div><div class="key" data-key="v">V</div>
 </div>
 <div class="bottom"><span>判定: PGREAT / GREAT / GOOD / BAD / POOR</span><span id="fastslow">FAST 0　SLOW 0</span></div>
 <div class="help">
- 操作：Z・X・C・V・S・D・F＝1～7鍵、左Shift＝スクラッチ。<br>
+ 操作：Z・S・X・D・C・F・V＝1～7鍵、左Shift＝スクラッチ。<br>
  ノーツは判定ラインに重なる瞬間に入力。STARTでデモ譜面を開始できます。Spaceでも一時停止できます。
 </div>
 </main>
