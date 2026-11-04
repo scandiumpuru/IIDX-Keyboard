@@ -12,7 +12,7 @@ button:hover{background:#18516d}
 .gauge{height:12px;background:#263443;border:1px solid #496076;margin-top:6px;overflow:hidden}
 #gaugeFill{height:100%;width:22%;background:linear-gradient(90deg,#00a7ff,#7cf7ff);transition:width .08s}
 .stage{position:relative;background:radial-gradient(ellipse at 50% 15%,#172c43,#050a12 70%);border:1px solid #24425b;border-radius:6px;padding:12px;overflow:hidden}
-canvas{display:block;width:100%;height:auto;max-height:72vh;aspect-ratio:1000/650;background:#050b14}
+canvas{display:block;width:100%;height:auto;max-height:72vh;aspect-ratio:1000/850;background:#050b14}
 .bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#90aabe;font-size:12px;margin-top:10px}
 #status{color:var(--gold);font-weight:bold}
 .keys{display:flex;gap:5px;justify-content:center;margin-top:12px;flex-wrap:wrap}
@@ -23,3 +23,6 @@ canvas{display:block;width:100%;height:auto;max-height:72vh;aspect-ratio:1000/65
 .key.scratch.active{background:#fff0a0;box-shadow:0 0 15px #ffc72c}
 .help{font-size:12px;line-height:1.7;color:#9bb2c5;margin-top:12px}
 @media(max-width:650px){.hud{grid-template-columns:1fr 1fr}.stage{padding:5px}main{padding:9px}}
+.speed-control{display:flex;align-items:center;justify-content:center;gap:12px;margin:10px 0 12px;padding:9px 12px;background:#101b2b;border:1px solid #24425b;border-radius:5px;color:#9fc4dc;font-size:12px;font-weight:bold;letter-spacing:.08em}
+.speed-control input{width:min(360px,55vw);accent-color:#25d9ff;cursor:pointer}
+.speed-control output{min-width:42px;color:#fff;font-size:14px;font-variant-numeric:tabular-nums}
