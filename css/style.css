@@ -12,7 +12,7 @@ button:hover{background:#18516d}
 .gauge{height:12px;background:#263443;border:1px solid #496076;margin-top:6px;overflow:hidden}
 #gaugeFill{height:100%;width:22%;background:linear-gradient(90deg,#00a7ff,#7cf7ff);transition:width .08s}
 .stage{position:relative;background:radial-gradient(ellipse at 50% 15%,#172c43,#050a12 70%);border:1px solid #24425b;border-radius:6px;padding:12px;overflow:hidden}
-canvas{display:block;width:100%;height:auto;max-height:72vh;aspect-ratio:1000/850;background:#050b14}
+canvas{display:block;width:100%;height:auto;aspect-ratio:1000/2575;background:#050b14}
 .bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#90aabe;font-size:12px;margin-top:10px}
 #status{color:var(--gold);font-weight:bold}
 .keys{display:flex;gap:5px;justify-content:center;margin-top:12px;flex-wrap:wrap}
