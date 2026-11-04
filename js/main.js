@@ -9,7 +9,7 @@ function updateLevel(){if(!chartData)return;const d=chartData.difficulties[selec
 const keys=['shift','z','s','x','d','c','f','v'];
 const laneNames=['皿','1','2','3','4','5','6','7'];
 const laneWidths=[150,105,75,105,75,105,75,105];
-const laneGap=3, top=48, hitY=755, travel=690, approach=1900;
+const laneGap=3, top=48, hitY=2496, travel=2448, approach=1900;
 let hiSpeed=1.0;
 const speedInput=$('speed'),speedValue=$('speedValue');
 function setSpeed(v){hiSpeed=Number(v);speedValue.textContent=hiSpeed.toFixed(1)+'x';}
