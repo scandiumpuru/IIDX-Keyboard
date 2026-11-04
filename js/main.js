@@ -1,6 +1,11 @@
 (()=>{
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
 const $=id=>document.getElementById(id);
+const audio=$('music');
+let chartData=null,selectedDifficulty='normal';
+fetch('charts/kouka.json').then(r=>{if(!r.ok)throw new Error('chart load failed');return r.json();}).then(data=>{chartData=data;$('startBtn').disabled=false;$('status').textContent='READY';updateLevel();}).catch(()=>{$('status').textContent='CHART ERROR';});
+$('difficulty').addEventListener('change',e=>{selectedDifficulty=e.target.value;updateLevel();});
+function updateLevel(){if(!chartData)return;const d=chartData.difficulties[selectedDifficulty];$('level').textContent=chartData.song+' · '+selectedDifficulty.toUpperCase()+' ☆'+d.level;$('gaugeTitle').textContent=selectedDifficulty.toUpperCase();}
 const keys=['shift','z','s','x','d','c','f','v'];
 const laneNames=['皿','1','2','3','4','5','6','7'];
 const laneWidths=[150,105,75,105,75,105,75,105];
@@ -19,20 +24,16 @@ let counts={PGREAT:0,GREAT:0,GOOD:0,BAD:0,POOR:0};
 let held=new Set(),lastJudge='',judgeUntil=0,judgeDelta=0;
 const timings={PGREAT:16.67,GREAT:33.33,GOOD:116.67,BAD:250};
 function makeChart(){
- const a=[];
- let t=2200;
- // Beginner demo: one note at a time, with generous spacing.
- const pattern=[1,2,3,4,5,6,7,4,2,5,3,6,4,1,7,5,2,4,6,3,5,7,4,2,1,3,5,7];
- pattern.forEach((lane,i)=>{
-  a.push({t,l:lane,judged:false});
-  t+=i%7===6?850:650;
- });
- return a;
+ if(!chartData)return [];
+ const data=chartData.difficulties[selectedDifficulty];
+ return data.notes.map(([t,l])=>({t,l,judged:false}));
 }
 function reset(){
+ if(!chartData)return;
+ audio.pause();audio.currentTime=0;
  chart=makeChart();score=combo=maxCombo=bp=fast=slow=0;gauge=22;
  counts={PGREAT:0,GREAT:0,GOOD:0,BAD:0,POOR:0};held.clear();lastJudge='';
- elapsed=0;startAt=performance.now()+1200;state='playing';$('status').textContent='GET READY';
+ elapsed=0;startAt=performance.now();state='playing';$('status').textContent='PLAYING';audio.play().catch(()=>{$('status').textContent='AUDIO ERROR';});updateLevel();
  $('maxScore').textContent='MAX '+String(chart.length*2).padStart(6,'0');updateHud();
  if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
 }
@@ -56,7 +57,7 @@ function setJudge(name,delta=0){
  gauge=Math.max(0,Math.min(100,gauge));
  if(Math.abs(delta)>1){if(delta<0)fast++;else slow++;}
  updateHud();
- if(gauge<=0){state='failed';$('status').textContent='FAILED';}
+ if(gauge<=0){state='failed';audio.pause();$('status').textContent='FAILED';}
 }
 function input(lane){
  if(state!=='playing')return;
@@ -82,8 +83,8 @@ function keyup(e){
 window.addEventListener('keydown',keydown);window.addEventListener('keyup',keyup);
 window.addEventListener('blur',()=>{held.clear();document.querySelectorAll('.key').forEach(x=>x.classList.remove('active'));});
 function pause(){
- if(state==='playing'){state='paused';pausedAt=performance.now();$('status').textContent='PAUSED';}
- else if(state==='paused'){startAt+=performance.now()-pausedAt;state='playing';$('status').textContent='PLAYING';raf=requestAnimationFrame(loop);}
+ if(state==='playing'){state='paused';audio.pause();pausedAt=performance.now();$('status').textContent='PAUSED';}
+ else if(state==='paused'){state='playing';audio.play().catch(()=>{});$('status').textContent='PLAYING';raf=requestAnimationFrame(loop);}
 }
 $('startBtn').onclick=reset;$('pauseBtn').onclick=pause;
 window.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();pause();}});
@@ -133,11 +134,11 @@ function draw(){
 }
 function loop(ts){
  if(state!=='playing'){draw();return;}
- elapsed=Math.max(0,ts-startAt);
+ elapsed=audio.currentTime*1000;
  $('status').textContent=ts<startAt?'GET READY':'PLAYING';
  for(const n of chart){if(!n.judged&&elapsed>n.t+timings.BAD){n.judged=true;setJudge('POOR',timings.BAD+1);}}
  if(gauge<=0){draw();return;}
- if(chart.every(n=>n.judged)){state='clear';$('status').textContent=gauge>=80?'CLEAR':'FAILED';draw();return;}
+ if(chart.every(n=>n.judged)){state='clear';audio.pause();$('status').textContent=gauge>=80?'CLEAR':'FAILED';draw();return;}
  draw();raf=requestAnimationFrame(loop);
 }
 draw();updateHud();
