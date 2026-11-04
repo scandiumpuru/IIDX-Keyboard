@@ -104,7 +104,7 @@ function draw(){
   const y=hitY-(dt/approach)*travel*hiSpeed,lw=laneWidths[n.l],x=laneX(n.l)+5,nw=lw-10;
   const grad=ctx.createLinearGradient(x,y-18,x+nw,y+5);
   if(n.l===0){grad.addColorStop(0,'#fff1a0');grad.addColorStop(1,'#c48b24');}
-  else if(n.l<=4){grad.addColorStop(0,'#3c424b');grad.addColorStop(1,'#05070b');}
+  else if(n.l%2===1){grad.addColorStop(0,'#3c424b');grad.addColorStop(1,'#05070b');}
   else{grad.addColorStop(0,'#8be8ff');grad.addColorStop(1,'#07559e');}
   ctx.save();ctx.shadowColor=n.l===0?'#ffd34d':(n.l%2===1?'#aeb8c8':'#24aaff');ctx.shadowBlur=10;
   ctx.fillStyle=grad;ctx.fillRect(x,y-18,nw,20);ctx.restore();
