@@ -1,10 +1,15 @@
 (()=>{
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
 const $=id=>document.getElementById(id);
-const keys=['shift','z','x','c','v','s','d','f'];
+const keys=['shift','z','s','x','d','c','f','v'];
 const laneNames=['皿','1','2','3','4','5','6','7'];
-const laneWidths=[150,105,105,105,105,75,75,75];
-const laneGap=3, top=48, hitY=555, travel=490, approach=1900;
+const laneWidths=[150,105,75,105,75,105,75,105];
+const laneGap=3, top=48, hitY=755, travel=690, approach=1900;
+let hiSpeed=1.0;
+const speedInput=$('speed'),speedValue=$('speedValue');
+function setSpeed(v){hiSpeed=Number(v);speedValue.textContent=hiSpeed.toFixed(1)+'x';}
+speedInput.addEventListener('input',()=>setSpeed(speedInput.value));
+setSpeed(speedInput.value);
 const laneTotal=laneWidths.reduce((a,b)=>a+b,0)+laneGap*7;
 const laneLeft=(canvas.width-laneTotal)/2;
 const laneX=i=>laneLeft+laneWidths.slice(0,i).reduce((a,b)=>a+b+laneGap,0);
@@ -87,23 +92,23 @@ function draw(){
  ctx.fillStyle='#0a1422';ctx.fillRect(laneLeft-8,top,laneTotal+16,hitY-top+75);
  for(let i=0;i<8;i++){
   const x=laneX(i),lw=laneWidths[i];
-  ctx.fillStyle=i===0?'#302819':(i<=4?'#10141c':'#10263c');ctx.fillRect(x,top,lw,hitY-top+75);
-  ctx.fillStyle=i===0?'#e0b84d':(i<=4?'#59616b':'#258bd0');ctx.fillRect(x,hitY,lw,7);
+  ctx.fillStyle=i===0?'#302819':(i%2===1?'#10141c':'#10263c');ctx.fillRect(x,top,lw,hitY-top+75);
+  ctx.fillStyle=i===0?'#e0b84d':(i%2===1?'#59616b':'#258bd0');ctx.fillRect(x,hitY,lw,7);
   ctx.fillStyle='#9dbbd0';ctx.font='bold 17px Arial';ctx.textAlign='center';ctx.fillText(laneNames[i],x+lw/2,hitY+34);
-  if(held.has(keys[i])){ctx.save();ctx.shadowColor=i===0?'#ffd34d':(i<=4?'#f4f7ff':'#28aaff');ctx.shadowBlur=24;ctx.fillStyle=i===0?'#f4d77a':(i<=4?'#dce5ef':'#4ce8ff');ctx.globalAlpha=.34;ctx.fillRect(x,top,lw,hitY-top+75);ctx.restore();}
+  if(held.has(keys[i])){ctx.save();ctx.shadowColor=i===0?'#ffd34d':(i%2===1?'#f4f7ff':'#28aaff');ctx.shadowBlur=24;ctx.fillStyle=i===0?'#f4d77a':(i%2===1?'#dce5ef':'#4ce8ff');ctx.globalAlpha=.34;ctx.fillRect(x,top,lw,hitY-top+75);ctx.restore();}
  }
  for(let y=top+45;y<h;y+=90){ctx.strokeStyle='#20364b';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(laneLeft,y);ctx.lineTo(laneLeft+laneTotal,y);ctx.stroke();}
  chart.forEach(n=>{
   if(n.judged)return;
-  const dt=n.t-elapsed;if(dt>approach||dt< -timings.BAD-30)return;
-  const y=hitY-(dt/approach)*travel,lw=laneWidths[n.l],x=laneX(n.l)+5,nw=lw-10;
+  const dt=n.t-elapsed;if(dt>approach/hiSpeed||dt< -timings.BAD-30)return;
+  const y=hitY-(dt/approach)*travel*hiSpeed,lw=laneWidths[n.l],x=laneX(n.l)+5,nw=lw-10;
   const grad=ctx.createLinearGradient(x,y-18,x+nw,y+5);
   if(n.l===0){grad.addColorStop(0,'#fff1a0');grad.addColorStop(1,'#c48b24');}
   else if(n.l<=4){grad.addColorStop(0,'#3c424b');grad.addColorStop(1,'#05070b');}
   else{grad.addColorStop(0,'#8be8ff');grad.addColorStop(1,'#07559e');}
-  ctx.save();ctx.shadowColor=n.l===0?'#ffd34d':(n.l<=4?'#aeb8c8':'#24aaff');ctx.shadowBlur=10;
+  ctx.save();ctx.shadowColor=n.l===0?'#ffd34d':(n.l%2===1?'#aeb8c8':'#24aaff');ctx.shadowBlur=10;
   ctx.fillStyle=grad;ctx.fillRect(x,y-18,nw,20);ctx.restore();
-  ctx.fillStyle=n.l<=4?'#cbd3dd':'#dff8ff';ctx.fillRect(x,y-18,nw,2);
+  ctx.fillStyle=n.l%2===1?'#cbd3dd':'#dff8ff';ctx.fillRect(x,y-18,nw,2);
  });
  ctx.fillStyle='#e6faff';ctx.shadowColor='#4bdcff';ctx.shadowBlur=12;ctx.fillRect(laneLeft,hitY-2,laneTotal,3);ctx.shadowBlur=0;
  ctx.fillStyle='#b8d8eb';ctx.font='12px Arial';ctx.textAlign='left';ctx.fillText('JUDGE LINE',laneLeft,hitY+58);
@@ -122,7 +127,7 @@ function draw(){
   ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(laneLeft,top,laneTotal,hitY-top);
   ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='bold 30px Arial';
   ctx.fillText(state==='ready'?'PRESS START':state==='paused'?'PAUSED':state==='failed'?'STAGE FAILED':'STAGE CLEAR',laneLeft+laneTotal/2,300);
-  ctx.font='15px Arial';ctx.fillStyle='#9dc9e4';ctx.fillText('LEFT SHIFT  /  Z X C V  /  S D F',laneLeft+laneTotal/2,332);
+  ctx.font='15px Arial';ctx.fillStyle='#9dc9e4';ctx.fillText('LEFT SHIFT  /  Z S X D C F V',laneLeft+laneTotal/2,332);
  }
 }
 function loop(ts){
