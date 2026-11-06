@@ -61,8 +61,8 @@ function setJudge(name,delta=0){
  const n=Math.max(1,chart.reduce((s,x)=>s+(x.duration?2:1),0)),gain=78/n;
  if(name==='PGREAT'||name==='GREAT')gauge+=gain;
  else if(name==='GOOD')gauge+=gain*.5;
- else if(name==='BAD')gauge-=2;
- else gauge-=6;
+ else if(name==='BAD')gauge-=0.8;
+ else gauge-=2.5;
  gauge=Math.max(0,Math.min(100,gauge));
  if(Math.abs(delta)>1){if(delta<0)fast++;else slow++;}
  updateHud();
