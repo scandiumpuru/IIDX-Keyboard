@@ -2,8 +2,17 @@
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
 const $=id=>document.getElementById(id);
 const audio=$('music');
-let chartData=null,selectedDifficulty='normal';
-fetch('charts/kouka.json').then(r=>{if(!r.ok)throw new Error('chart load failed');return r.json();}).then(data=>{chartData=data;$('startBtn').disabled=false;$('status').textContent='READY';updateLevel();}).catch(()=>{$('status').textContent='CHART ERROR';});
+let chartData=null,selectedDifficulty='normal',selectedSong='kouka';
+const songs={kouka:{chart:'charts/kouka.json',audio:'music/Kouka.mp3'},tsugite:{chart:'charts/tsugite.json',audio:'music/系ぎて.mp3'}};
+async function loadSong(){
+ $('startBtn').disabled=true;audio.pause();state='ready';
+ try{
+  const r=await fetch(songs[selectedSong].chart);if(!r.ok)throw new Error('chart load failed');
+  chartData=await r.json();audio.src=songs[selectedSong].audio;audio.load();
+  $('startBtn').disabled=false;$('status').textContent='READY';updateLevel();
+ }catch(e){chartData=null;$('status').textContent='CHART ERROR';}
+}
+$('songSelect').addEventListener('change',e=>{selectedSong=e.target.value;loadSong();});
 $('difficulty').addEventListener('change',e=>{selectedDifficulty=e.target.value;updateLevel();});
 function updateLevel(){if(!chartData)return;const d=chartData.difficulties[selectedDifficulty];$('level').textContent=chartData.song+' · '+selectedDifficulty.toUpperCase()+' ☆'+d.level;$('gaugeTitle').textContent=selectedDifficulty.toUpperCase();}
 const keys=['shift','z','s','x','d','c','f','v'];
@@ -26,7 +35,7 @@ const timings={PGREAT:16.67,GREAT:33.33,GOOD:116.67,BAD:250};
 function makeChart(){
  if(!chartData)return [];
  const data=chartData.difficulties[selectedDifficulty];
- return data.notes.map(([t,l])=>({t,l,judged:false}));
+ return data.notes.map(([t,l,duration=0])=>({t,l,duration,judged:false,tailJudged:!duration,holding:false,broken:false}));
 }
 function reset(){
  if(!chartData)return;
@@ -34,7 +43,7 @@ function reset(){
  chart=makeChart();score=combo=maxCombo=bp=fast=slow=0;gauge=22;
  counts={PGREAT:0,GREAT:0,GOOD:0,BAD:0,POOR:0};held.clear();lastJudge='';
  elapsed=0;startAt=performance.now();state='playing';$('status').textContent='PLAYING';audio.play().catch(()=>{$('status').textContent='AUDIO ERROR';});updateLevel();
- $('maxScore').textContent='MAX '+String(chart.length*2).padStart(6,'0');updateHud();
+ $('maxScore').textContent='MAX '+String(chart.reduce((s,n)=>s+(n.duration?4:2),0)).padStart(6,'0');updateHud();
  if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
 }
 function updateHud(){
@@ -49,7 +58,7 @@ function setJudge(name,delta=0){
  else{combo=0;bp++;}
  maxCombo=Math.max(maxCombo,combo);counts[name]=(counts[name]||0)+1;
  if(name==='PGREAT')score+=2;else if(name==='GREAT')score+=1;
- const n=Math.max(1,chart.length),gain=78/n;
+ const n=Math.max(1,chart.reduce((s,x)=>s+(x.duration?2:1),0)),gain=78/n;
  if(name==='PGREAT'||name==='GREAT')gauge+=gain;
  else if(name==='GOOD')gauge+=gain*.5;
  else if(name==='BAD')gauge-=2;
@@ -66,6 +75,7 @@ function input(lane){
  const note=candidates.sort((a,b)=>Math.abs(elapsed-a.t)-Math.abs(elapsed-b.t))[0];
  const d=elapsed-note.t,ad=Math.abs(d);note.judged=true;
  const j=ad<=timings.PGREAT?'PGREAT':ad<=timings.GREAT?'GREAT':ad<=timings.GOOD?'GOOD':'BAD';
+ if(note.duration)note.holding=held.has(keys[lane]);
  setJudge(j,d);
 }
 function keydown(e){
@@ -79,6 +89,7 @@ function keydown(e){
 function keyup(e){
  const k=e.key.toLowerCase()==='shift'?'shift':e.key.toLowerCase();
  held.delete(k);document.querySelector(`[data-key="${k==='shift'?'Shift':k}"]`)?.classList.remove('active');
+ const lane=keys.indexOf(k);if(lane>=0){for(const n of chart){if(n.duration&&n.l===lane&&n.judged&&!n.tailJudged&&elapsed<n.t+n.duration&&n.holding){n.holding=false;n.broken=true;n.tailJudged=true;setJudge('BAD',0);}}}
 }
 window.addEventListener('keydown',keydown);window.addEventListener('keyup',keyup);
 window.addEventListener('blur',()=>{held.clear();document.querySelectorAll('.key').forEach(x=>x.classList.remove('active'));});
@@ -101,9 +112,10 @@ function draw(){
  }
  for(let y=top+45;y<h;y+=90){ctx.strokeStyle='#20364b';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(laneLeft,y);ctx.lineTo(laneLeft+laneTotal,y);ctx.stroke();}
  chart.forEach(n=>{
-  if(n.judged)return;
+  if(n.judged&&(!n.duration||n.tailJudged))return;
   const dt=n.t-elapsed;if(dt>approach/hiSpeed||dt< -timings.BAD-30)return;
   const y=hitY-(dt/approach)*travel*hiSpeed,lw=laneWidths[n.l],x=laneX(n.l)+5,nw=lw-10;
+  if(n.duration){const tailY=hitY-((dt-n.duration)/approach)*travel*hiSpeed;ctx.fillStyle=n.holding?'#f5d76e':'#39b9ef';ctx.globalAlpha=.75;ctx.fillRect(x+nw*.25,y-18,nw*.5,tailY-y+18);ctx.globalAlpha=1;}
   const grad=ctx.createLinearGradient(x,y-18,x+nw,y+5);
   if(n.l===0){grad.addColorStop(0,'#fff1a0');grad.addColorStop(1,'#c48b24');}
   else if(n.l%2===1){grad.addColorStop(0,'#3c424b');grad.addColorStop(1,'#05070b');}
@@ -136,10 +148,10 @@ function loop(ts){
  if(state!=='playing'){draw();return;}
  elapsed=audio.currentTime*1000;
  $('status').textContent='PLAYING';
- for(const n of chart){if(!n.judged&&elapsed>n.t+timings.BAD){n.judged=true;setJudge('POOR',timings.BAD+1);}}
+ for(const n of chart){if(!n.judged&&elapsed>n.t+timings.BAD){n.judged=true;setJudge('POOR',timings.BAD+1);}if(n.duration&&n.judged&&!n.tailJudged&&elapsed>=n.t+n.duration){n.tailJudged=true;if(n.holding&&!n.broken){setJudge('PGREAT',0);}else{setJudge('POOR',0);}}}
  if(gauge<=0){draw();return;}
- if(chart.every(n=>n.judged)){state='clear';audio.pause();$('status').textContent=gauge>=80?'CLEAR':'FAILED';draw();return;}
+ if(chart.every(n=>n.judged&&n.tailJudged)){state='clear';audio.pause();$('status').textContent=gauge>=80?'CLEAR':'FAILED';draw();return;}
  draw();raf=requestAnimationFrame(loop);
 }
-draw();updateHud();
+draw();updateHud();loadSong();
 })();
