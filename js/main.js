@@ -113,7 +113,7 @@ function draw(){
  for(let y=top+45;y<h;y+=90){ctx.strokeStyle='#20364b';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(laneLeft,y);ctx.lineTo(laneLeft+laneTotal,y);ctx.stroke();}
  chart.forEach(n=>{
   if(n.judged&&(!n.duration||n.tailJudged))return;
-  const dt=n.t-elapsed;if(dt>approach/hiSpeed||dt< -timings.BAD-30)return;
+  const dt=n.t-elapsed,tailDt=n.duration?dt+n.duration:dt;if(dt>approach/hiSpeed||tailDt< -timings.BAD-30)return;
   const y=hitY-(dt/approach)*travel*hiSpeed,lw=laneWidths[n.l],x=laneX(n.l)+5,nw=lw-10;
   if(n.duration){const tailY=hitY-((dt+n.duration)/approach)*travel*hiSpeed;ctx.fillStyle=n.holding?'#f5d76e':'#39b9ef';ctx.globalAlpha=.75;ctx.fillRect(x+nw*.25,tailY,nw*.5,Math.max(0,y-tailY));ctx.globalAlpha=1;}
   const grad=ctx.createLinearGradient(x,y-18,x+nw,y+5);
