@@ -115,7 +115,7 @@ function draw(){
   if(n.judged&&(!n.duration||n.tailJudged))return;
   const dt=n.t-elapsed;if(dt>approach/hiSpeed||dt< -timings.BAD-30)return;
   const y=hitY-(dt/approach)*travel*hiSpeed,lw=laneWidths[n.l],x=laneX(n.l)+5,nw=lw-10;
-  if(n.duration){const tailY=hitY-((dt-n.duration)/approach)*travel*hiSpeed;ctx.fillStyle=n.holding?'#f5d76e':'#39b9ef';ctx.globalAlpha=.75;ctx.fillRect(x+nw*.25,y-18,nw*.5,tailY-y+18);ctx.globalAlpha=1;}
+  if(n.duration){const tailY=hitY-((dt+n.duration)/approach)*travel*hiSpeed;ctx.fillStyle=n.holding?'#f5d76e':'#39b9ef';ctx.globalAlpha=.75;ctx.fillRect(x+nw*.25,tailY,nw*.5,Math.max(0,y-tailY));ctx.globalAlpha=1;}
   const grad=ctx.createLinearGradient(x,y-18,x+nw,y+5);
   if(n.l===0){grad.addColorStop(0,'#fff1a0');grad.addColorStop(1,'#c48b24');}
   else if(n.l%2===1){grad.addColorStop(0,'#3c424b');grad.addColorStop(1,'#05070b');}
